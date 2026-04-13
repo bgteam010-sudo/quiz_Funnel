@@ -1,0 +1,404 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{background:var(--color-background-secondary);padding:1.5rem 1rem;display:flex;justify-content:center;min-height:600px}
+.phone{width:360px;background:#fff;border-radius:32px;border:0.5px solid var(--color-border-secondary);overflow:hidden;min-height:580px;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;flex:1}
+.screen.active{display:flex}
+.top-bar{background:#1B4D3E;padding:1.2rem 1.2rem 1rem}
+.progress-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.back-btn{background:none;border:none;color:#fff;font-size:13px;cursor:pointer;padding:0;opacity:0.8}
+.step-label{color:#ffffffcc;font-size:12px;margin-left:auto}
+.prog-bar{height:4px;background:#ffffff33;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:#fff;border-radius:2px;transition:width 0.3s}
+.q-text{color:#fff;font-size:16px;font-weight:500;line-height:1.4;padding:0.8rem 0 0.2rem}
+.options{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:10px;flex:1}
+.opt{border:0.5px solid #d0e8df;border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;background:#fff;transition:border-color 0.15s,background 0.15s}
+.opt:hover{border-color:#1B4D3E;background:#F0F7F4}
+.opt.selected{border-color:#1B4D3E;background:#E8F5EF}
+.opt-icon{width:32px;height:32px;border-radius:50%;background:#F0F7F4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.opt-text{font-size:14px;color:#222;line-height:1.3}
+.next-btn{margin:0 1.2rem 1.2rem;background:#1B4D3E;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:500;cursor:pointer;opacity:0.4;pointer-events:none}
+.next-btn.ready{opacity:1;pointer-events:all}
+.land-top{background:#1B4D3E;padding:2.5rem 1.5rem 2rem;text-align:center}
+.land-badge{display:inline-block;background:#ffffff22;border:0.5px solid #ffffff44;color:#fff;font-size:11px;padding:4px 14px;border-radius:20px;margin-bottom:1rem}
+.liver-circle{width:70px;height:70px;background:#ffffff18;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center}
+.land-top h1{color:#fff;font-size:20px;font-weight:500;line-height:1.35;margin-bottom:0.5rem}
+.land-top p{color:#ffffffbb;font-size:13px;line-height:1.6}
+.land-body{padding:1.2rem;flex:1;display:flex;flex-direction:column}
+.stats-row{display:flex;gap:8px;margin-bottom:1.2rem}
+.stat-box{flex:1;background:#F0F7F4;border-radius:8px;padding:8px;text-align:center}
+.stat-n{font-size:14px;font-weight:500;color:#1B4D3E}
+.stat-l{font-size:10px;color:#666;margin-top:2px}
+.feat-list{margin-bottom:1.2rem}
+.feat-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#333;padding:4px 0}
+.chk{width:18px;height:18px;border-radius:50%;background:#E8F5EF;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.start-btn{background:#1B4D3E;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px}
+.trust-line{text-align:center;font-size:11px;color:#999}
+.lead-top{background:#1B4D3E;padding:1.5rem;text-align:center}
+.lead-top h2{color:#fff;font-size:18px;font-weight:500;margin-bottom:4px}
+.lead-top p{color:#ffffffbb;font-size:12px}
+.lead-body{padding:1.2rem;flex:1;display:flex;flex-direction:column;gap:10px}
+.field-group{display:flex;flex-direction:column;gap:4px}
+.field-label{font-size:12px;color:#555;font-weight:500}
+.field-input{border:0.5px solid #d0e8df;border-radius:8px;padding:10px 12px;font-size:14px;color:#222;outline:none;width:100%}
+.field-input:focus{border-color:#1B4D3E}
+.req{color:#e24b4a;font-size:11px}
+.submit-btn{background:#1B4D3E;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px}
+.submit-btn:disabled{opacity:0.5}
+.result-top{padding:1.5rem;text-align:center}
+.score-circle{width:90px;height:90px;border-radius:50%;margin:0 auto 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid #1B4D3E}
+.score-num{font-size:26px;font-weight:500;color:#1B4D3E;line-height:1}
+.score-max{font-size:11px;color:#888;margin-top:2px}
+.result-badge{display:inline-block;font-size:12px;padding:4px 14px;border-radius:20px;margin-bottom:0.8rem;font-weight:500}
+.result-title{font-size:18px;font-weight:500;color:#111;margin-bottom:0.5rem}
+.result-desc{font-size:13px;color:#555;line-height:1.6;margin-bottom:1rem}
+.result-body{padding:0 1.2rem 1.2rem;flex:1;display:flex;flex-direction:column}
+.rec-box{background:#F0F7F4;border-radius:10px;padding:1rem;margin-bottom:1rem}
+.rec-title{font-size:13px;font-weight:500;color:#1B4D3E;margin-bottom:6px}
+.rec-text{font-size:12px;color:#444;line-height:1.6}
+.wa-btn{background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.pdf-btn{background:#1B4D3E;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.urgency{text-align:center;font-size:11px;color:#e24b4a;font-weight:500;margin-bottom:8px}
+.restart-btn{background:none;border:0.5px solid #d0e8df;border-radius:10px;padding:10px;font-size:13px;color:#666;cursor:pointer;width:100%}
+.status-msg{font-size:12px;color:#1B4D3E;text-align:center;padding:6px;background:#E8F5EF;border-radius:8px;margin-top:6px}
+.error-msg{font-size:12px;color:#e24b4a;text-align:center;padding:6px;background:#FCEBEB;border-radius:8px;margin-top:6px}
+</style>
+
+<h2 class="sr-only">Full liver health quiz funnel with PDF report generation, GHL webhook, WhatsApp and email integration</h2>
+
+<div class="wrap">
+<div class="phone">
+
+<div class="screen active" id="s-land">
+  <div class="land-top">
+    <div class="land-badge">Free — 60 seconds</div>
+    <div class="liver-circle">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M8 16 C8 10 14 7 20 9 C26 11 28 8 29 12 C30 16 27 24 20 26 C13 28 8 22 8 16Z" fill="#fff" opacity="0.9"/>
+        <circle cx="14" cy="17" r="2" fill="#1B4D3E" opacity="0.5"/>
+        <circle cx="21" cy="15" r="1.5" fill="#1B4D3E" opacity="0.4"/>
+      </svg>
+    </div>
+    <h1>Check your liver health score in 60 seconds</h1>
+    <p>Find out if your liver is affecting your energy, digestion & fat loss</p>
+  </div>
+  <div class="land-body">
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-n">10,000+</div><div class="stat-l">Tested</div></div>
+      <div class="stat-box"><div class="stat-n">5 Qs</div><div class="stat-l">Only</div></div>
+      <div class="stat-box"><div class="stat-n">Free</div><div class="stat-l">Always</div></div>
+    </div>
+    <div class="feat-list">
+      <div class="feat-item"><div class="chk"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>Know your liver stress level</div>
+      <div class="feat-item"><div class="chk"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>Get personalised recommendations</div>
+      <div class="feat-item"><div class="chk"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>PDF report sent to your WhatsApp & email</div>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">Start free test</button>
+    <div class="trust-line">No spam. Only your result.</div>
+  </div>
+</div>
+
+<div class="screen" id="s-quiz">
+  <div class="top-bar">
+    <div class="progress-row">
+      <button class="back-btn" onclick="goBack()">&#8592; Back</button>
+      <span class="step-label" id="step-label">Step 1 of 5</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:20%"></div></div>
+    <div class="q-text" id="q-text"></div>
+  </div>
+  <div class="options" id="options-wrap"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="screen" id="s-lead">
+  <div class="lead-top">
+    <h2>Your liver score is ready</h2>
+    <p>Enter details to receive your PDF report</p>
+  </div>
+  <div class="lead-body">
+    <div class="field-group">
+      <div class="field-label">Your name <span class="req">*</span></div>
+      <input class="field-input" id="f-name" type="text" placeholder="Enter your name">
+    </div>
+    <div class="field-group">
+      <div class="field-label">WhatsApp number <span class="req">*</span></div>
+      <input class="field-input" id="f-phone" type="tel" placeholder="+91 XXXXX XXXXX">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Email <span class="req">*</span></div>
+      <input class="field-input" id="f-email" type="email" placeholder="your@email.com">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Your weight</div>
+      <input class="field-input" id="f-weight" type="text" placeholder="e.g. 72 kg">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Your city</div>
+      <input class="field-input" id="f-city" type="text" placeholder="e.g. Mumbai">
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitLead()">Show my liver score & get PDF</button>
+    <div id="submit-status"></div>
+  </div>
+</div>
+
+<div class="screen" id="s-result">
+  <div class="result-top">
+    <div class="score-circle"><div class="score-num" id="r-score">0</div><div class="score-max">out of 50</div></div>
+    <div class="result-badge" id="r-badge"></div>
+    <div class="result-title" id="r-title"></div>
+    <div class="result-desc" id="r-desc"></div>
+  </div>
+  <div class="result-body">
+    <div class="rec-box">
+      <div class="rec-title">Recommended for you</div>
+      <div class="rec-text" id="r-rec"></div>
+    </div>
+    <button class="pdf-btn" id="pdf-btn" onclick="downloadPDF()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9,15 12,18 15,15"/></svg>
+      Download PDF report
+    </button>
+    <button class="wa-btn" id="wa-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.852L0 24l6.335-1.508A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.213-3.728.888.928-3.638-.234-.374A9.817 9.817 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+      Talk to expert on WhatsApp
+    </button>
+    <div class="urgency" id="r-urgency"></div>
+    <button class="restart-btn" onclick="restart()">Take quiz again</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const GHL_WEBHOOK = 'YOUR_GHL_WEBHOOK_URL_HERE';
+const ADMIN_EMAIL = 'YOUR_ADMIN_EMAIL_HERE';
+
+const questions = [
+  {q:"How do you feel during the day?",opts:[{i:"😴",t:"Mostly tired",p:10},{i:"😐",t:"Sometimes low energy",p:5},{i:"⚡",t:"Active most of the time",p:0}]},
+  {q:"Do you have fat around your stomach?",opts:[{i:"🔴",t:"Yes, clearly visible",p:10},{i:"⚠️",t:"Slightly",p:5},{i:"✅",t:"No",p:0}]},
+  {q:"How is your digestion?",opts:[{i:"😣",t:"Bloating or gas often",p:10},{i:"😐",t:"Sometimes uncomfortable",p:5},{i:"😊",t:"Smooth and normal",p:0}]},
+  {q:"How often do you eat outside or junk food?",opts:[{i:"🍔",t:"Almost daily",p:10},{i:"🍕",t:"2-3 times a week",p:5},{i:"🥗",t:"Rarely",p:0}]},
+  {q:"Your lifestyle is closer to:",opts:[{i:"🍻",t:"Regular drinking or late nights",p:10},{i:"🌙",t:"Occasional",p:5},{i:"🌿",t:"Rare or disciplined",p:0}]}
+];
+
+const results = [
+  {max:20,label:"Healthy",color:"#27500A",bg:"#EAF3DE",title:"Your liver is healthy",desc:"Your liver is functioning well. Keep your current lifestyle and avoid overloading it.",rec:"Maintain a balanced diet, stay hydrated and exercise regularly to keep your liver healthy.",tips:["Drink 3 litres of water daily","Eat green vegetables every day","Exercise at least 30 mins 5 days a week","Avoid processed sugar","Get 7-8 hours of sleep"],urgency:""},
+  {max:30,label:"Moderate",color:"#633806",bg:"#FAEEDA",title:"Your liver needs attention",desc:"Early signs of liver stress are visible. Small changes now can prevent bigger problems later.",rec:"Reduce oily and processed food. Consider a liver detox diet and increase water intake.",tips:["Cut down outside food to once a week","Increase water intake to 3 litres daily","Add turmeric and ginger to your diet","Avoid alcohol for 30 days","Walk 30 mins every morning"],urgency:""},
+  {max:40,label:"At risk",color:"#A32D2D",bg:"#FCEBEB",title:"Your liver is under stress",desc:"Your liver is overloaded and may be affecting your energy, digestion and fat metabolism.",rec:"Our 30-Day Liver Reset Kit is recommended. Speak to our expert for a personalised plan.",tips:["Immediately stop junk and fried food","Drink warm lemon water every morning","Avoid alcohol completely","Take liver support supplements","Consult our expert for a personalised reset plan"],urgency:"Limited consultation slots available today."},
+  {max:50,label:"Critical",color:"#791F1F",bg:"#FCEBEB",title:"Your liver is highly overloaded",desc:"Your liver is under heavy stress. Immediate action is strongly recommended to restore function.",rec:"Urgent care needed. Our expert will guide you with an immediate liver restoration plan.",tips:["Stop all processed food immediately","Avoid alcohol completely","Drink only warm water — no cold drinks","Start liver detox under expert guidance","Contact our expert today — do not delay"],urgency:"Act now — limited expert slots available today."}
+];
+
+let current=0,answers=[],selected=null,leadData={},currentResult=null;
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startQuiz(){current=0;answers=[];renderQuestion();show('s-quiz')}
+
+function renderQuestion(){
+  const q=questions[current];
+  document.getElementById('step-label').textContent=`Step ${current+1} of 5`;
+  document.getElementById('prog-fill').style.width=`${((current+1)/5)*100}%`;
+  document.getElementById('q-text').textContent=q.q;
+  selected=null;
+  const nb=document.getElementById('next-btn');
+  nb.classList.remove('ready');
+  const wrap=document.getElementById('options-wrap');
+  wrap.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const div=document.createElement('div');
+    div.className='opt';
+    div.innerHTML=`<div class="opt-icon" style="font-size:16px">${o.i}</div><div class="opt-text">${o.t}</div>`;
+    div.onclick=()=>{
+      document.querySelectorAll('.opt').forEach(x=>x.classList.remove('selected'));
+      div.classList.add('selected');
+      selected=i;
+      nb.classList.add('ready');
+    };
+    wrap.appendChild(div);
+  });
+}
+
+function nextQuestion(){
+  if(selected===null)return;
+  answers.push(questions[current].opts[selected].p);
+  if(current<4){current++;renderQuestion();}
+  else{show('s-lead');}
+}
+
+function goBack(){
+  if(current===0){show('s-land');}
+  else{current--;answers.pop();renderQuestion();}
+}
+
+async function submitLead(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const weight=document.getElementById('f-weight').value.trim();
+  const city=document.getElementById('f-city').value.trim();
+  if(!name||!phone||!email){
+    document.getElementById('submit-status').innerHTML='<div class="error-msg">Please enter name, WhatsApp number and email.</div>';
+    return;
+  }
+  const total=answers.reduce((a,b)=>a+b,0);
+  const r=results.find(x=>total<=x.max)||results[results.length-1];
+  leadData={name,phone,email,weight,city,score:total,result:r.label,title:r.title};
+  currentResult=r;
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='Processing...';
+  document.getElementById('submit-status').innerHTML='<div class="status-msg">Sending your data to GHL...</div>';
+  try{
+    await sendToGHL({name,phone,email,weight,city,score:total,result:r.label,title:r.title,desc:r.desc});
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">Data sent to GHL successfully.</div>';
+  }catch(e){
+    document.getElementById('submit-status').innerHTML='<div class="error-msg">GHL webhook not configured yet. Add your webhook URL in the code.</div>';
+  }
+  showResult(r,total,name,phone);
+}
+
+async function sendToGHL(data){
+  if(GHL_WEBHOOK==='YOUR_GHL_WEBHOOK_URL_HERE') throw new Error('No webhook');
+  await fetch(GHL_WEBHOOK,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      firstName:data.name,
+      phone:data.phone,
+      email:data.email,
+      city:data.city,
+      weight:data.weight,
+      liverScore:data.score,
+      liverResult:data.result,
+      liverTitle:data.title,
+      liverDesc:data.desc,
+      source:'Liver Health Quiz',
+      submittedAt:new Date().toISOString()
+    })
+  });
+}
+
+function showResult(r,total,name,phone){
+  document.getElementById('r-score').textContent=total;
+  const badge=document.getElementById('r-badge');
+  badge.textContent=r.label;
+  badge.style.background=r.bg;
+  badge.style.color=r.color;
+  document.getElementById('r-title').textContent=r.title;
+  document.getElementById('r-desc').textContent=r.desc;
+  document.getElementById('r-rec').textContent=r.rec;
+  document.getElementById('r-urgency').textContent=r.urgency;
+  document.getElementById('wa-btn').onclick=()=>{
+    const msg=encodeURIComponent(`Hi, I checked my liver score. My score is ${total}/50 (${r.label}). My name is ${name}. Please guide me.`);
+    window.open(`https://wa.me/91XXXXXXXXXX?text=${msg}`,'_blank');
+  };
+  show('s-result');
+}
+
+function downloadPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const name=leadData.name||'Customer';
+  const score=leadData.score;
+  const result=currentResult;
+  const W=210,pad=20;
+
+  doc.setFillColor(27,77,62);
+  doc.rect(0,0,W,45,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(22);
+  doc.setFont('helvetica','bold');
+  doc.text('Liver Health Report',W/2,20,{align:'center'});
+  doc.setFontSize(12);
+  doc.setFont('helvetica','normal');
+  doc.text(`Prepared for: ${name}`,W/2,30,{align:'center'});
+  doc.setFontSize(10);
+  doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`,W/2,38,{align:'center'});
+
+  doc.setTextColor(27,77,62);
+  doc.setFontSize(14);
+  doc.setFont('helvetica','bold');
+  doc.text('Your Liver Score',W/2,60,{align:'center'});
+
+  doc.setDrawColor(27,77,62);
+  doc.setLineWidth(0.5);
+  doc.circle(W/2,82,18,'S');
+  doc.setFontSize(24);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);
+  doc.text(`${score}`,W/2,86,{align:'center'});
+  doc.setFontSize(9);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(100,100,100);
+  doc.text('out of 50',W/2,92,{align:'center'});
+
+  const barX=pad,barY=108,barW=W-(pad*2),barH=6;
+  doc.setFillColor(220,220,220);
+  doc.roundedRect(barX,barY,barW,barH,3,3,'F');
+  const fill=Math.round((score/50)*barW);
+  const fc=score<=20?[39,80,10]:score<=30?[186,117,23]:score<=40?[163,45,45]:[121,31,31];
+  doc.setFillColor(fc[0],fc[1],fc[2]);
+  doc.roundedRect(barX,barY,fill,barH,3,3,'F');
+
+  doc.setFontSize(13);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(fc[0],fc[1],fc[2]);
+  doc.text(`Status: ${result.label}`,W/2,122,{align:'center'});
+
+  doc.setDrawColor(220,220,220);
+  doc.setLineWidth(0.3);
+  doc.line(pad,128,W-pad,128);
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);
+  doc.text('What this means',pad,137);
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(60,60,60);
+  const descLines=doc.splitTextToSize(result.desc,W-(pad*2));
+  doc.text(descLines,pad,145);
+
+  doc.line(pad,158,W-pad,158);
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);
+  doc.text('Your personalised recommendations',pad,167);
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(60,60,60);
+  let ty=175;
+  result.tips.forEach((tip,i)=>{
+    doc.setFillColor(27,77,62);
+    doc.circle(pad+2,ty-1.5,1.5,'F');
+    doc.text(tip,pad+7,ty);
+    ty+=9;
+  });
+
+  doc.line(pad,ty+5,W-pad,ty+5);
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);
+  doc.text('Next step',pad,ty+14);
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(60,60,60);
+  doc.text(result.rec,pad,ty+22,{maxWidth:W-(pad*2)});
+
+  doc.setFillColor(27,77,62);
+  doc.rect(0,272,W,25,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.text('Talk to our expert on WhatsApp',W/2,281,{align:'center'});
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.text('+91 XXXXXXXXXX  |  No spam. Only your report.',W/2,289,{align:'center'});
+
+  doc.save(`Liver_Health_Report_${name.replace(/\s/g,'_')}.pdf`);
+}
+
+function restart(){show('s-land')}
+</script>
