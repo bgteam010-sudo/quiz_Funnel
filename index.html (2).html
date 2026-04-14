@@ -307,7 +307,6 @@ async function sendToGoogleSheet(data){
   if(GOOGLE_SHEET_WEBHOOK==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') throw new Error('No sheet webhook');
   await fetch(GOOGLE_SHEET_WEBHOOK,{
     method:'POST',
-    mode:'no-cors',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       name:data.name,
