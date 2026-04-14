@@ -8,23 +8,12 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-
 .wrap{width:100%;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;background:#f0f4f3;padding:0}
-
 .phone{width:100%;max-width:480px;background:#fff;min-height:100vh;display:flex;flex-direction:column;position:relative}
-
-@media(min-width:520px){
-  .wrap{padding:2rem 1rem;align-items:flex-start}
-  .phone{min-height:auto;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10)}
-}
-
+@media(min-width:520px){.wrap{padding:2rem 1rem;align-items:flex-start}.phone{min-height:auto;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10)}}
 .screen{display:none;flex-direction:column;flex:1;min-height:100vh}
 .screen.active{display:flex}
-
-@media(min-width:520px){
-  .screen,.screen.active{min-height:auto}
-}
-
+@media(min-width:520px){.screen,.screen.active{min-height:auto}}
 .top-bar{background:#1B4D3E;padding:1.2rem 1.2rem 1rem}
 .progress-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
 .back-btn{background:none;border:none;color:#fff;font-size:14px;cursor:pointer;padding:0;opacity:0.85;touch-action:manipulation}
@@ -32,50 +21,40 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 .prog-bar{height:5px;background:#ffffff33;border-radius:3px;overflow:hidden}
 .prog-fill{height:100%;background:#fff;border-radius:3px;transition:width 0.3s}
 .q-text{color:#fff;font-size:17px;font-weight:500;line-height:1.4;padding:0.8rem 0 0.2rem}
-
 .options{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:12px;flex:1}
 .opt{border:1.5px solid #d0e8df;border-radius:14px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;background:#fff;transition:border-color 0.15s,background 0.15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .opt:active{background:#E8F5EF;border-color:#1B4D3E}
 .opt.selected{border-color:#1B4D3E;background:#E8F5EF}
 .opt-icon{width:36px;height:36px;border-radius:50%;background:#F0F7F4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
 .opt-text{font-size:15px;color:#222;line-height:1.3}
-
 .next-btn{margin:0 1.2rem 1.5rem;background:#1B4D3E;color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:500;cursor:pointer;opacity:0.4;pointer-events:none;touch-action:manipulation}
 .next-btn.ready{opacity:1;pointer-events:all}
-
 .land-top{background:#1B4D3E;padding:3rem 1.5rem 2rem;text-align:center}
 .land-badge{display:inline-block;background:#ffffff22;border:1px solid #ffffff44;color:#fff;font-size:12px;padding:5px 16px;border-radius:20px;margin-bottom:1.2rem}
 .liver-circle{width:75px;height:75px;background:#ffffff18;border-radius:50%;margin:0 auto 1.2rem;display:flex;align-items:center;justify-content:center}
 .land-top h1{color:#fff;font-size:22px;font-weight:600;line-height:1.35;margin-bottom:0.6rem}
 .land-top p{color:#ffffffbb;font-size:14px;line-height:1.7}
-
 .land-body{padding:1.4rem;flex:1;display:flex;flex-direction:column}
 .stats-row{display:flex;gap:10px;margin-bottom:1.4rem}
 .stat-box{flex:1;background:#F0F7F4;border-radius:10px;padding:10px 8px;text-align:center}
 .stat-n{font-size:15px;font-weight:600;color:#1B4D3E}
 .stat-l{font-size:11px;color:#666;margin-top:3px}
-
 .feat-list{margin-bottom:1.4rem}
 .feat-item{display:flex;align-items:center;gap:10px;font-size:14px;color:#333;padding:6px 0}
 .chk{width:20px;height:20px;border-radius:50%;background:#E8F5EF;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-
 .start-btn{background:#1B4D3E;color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-bottom:12px;touch-action:manipulation}
 .trust-line{text-align:center;font-size:12px;color:#999}
-
 .lead-top{background:#1B4D3E;padding:2rem 1.5rem;text-align:center}
 .lead-top h2{color:#fff;font-size:20px;font-weight:600;margin-bottom:6px}
 .lead-top p{color:#ffffffbb;font-size:13px}
-
 .lead-body{padding:1.4rem;flex:1;display:flex;flex-direction:column;gap:12px}
 .field-group{display:flex;flex-direction:column;gap:5px}
 .field-label{font-size:13px;color:#444;font-weight:500}
 .field-input{border:1.5px solid #d0e8df;border-radius:10px;padding:12px 14px;font-size:16px;color:#222;outline:none;width:100%;-webkit-appearance:none}
 .field-input:focus{border-color:#1B4D3E}
 .req{color:#e24b4a;font-size:12px}
-
 .submit-btn{background:#1B4D3E;color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;width:100%;touch-action:manipulation}
 .submit-btn:disabled{opacity:0.5}
-
 .result-top{padding:1.8rem 1.5rem;text-align:center}
 .score-circle{width:100px;height:100px;border-radius:50%;margin:0 auto 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid #1B4D3E}
 .score-num{font-size:30px;font-weight:600;color:#1B4D3E;line-height:1}
@@ -83,23 +62,19 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 .result-badge{display:inline-block;font-size:13px;padding:5px 16px;border-radius:20px;margin-bottom:1rem;font-weight:600}
 .result-title{font-size:20px;font-weight:600;color:#111;margin-bottom:0.6rem}
 .result-desc{font-size:14px;color:#555;line-height:1.7;margin-bottom:1rem}
-
 .result-body{padding:0 1.4rem 2rem;flex:1;display:flex;flex-direction:column}
 .rec-box{background:#F0F7F4;border-radius:12px;padding:1.1rem;margin-bottom:1rem}
 .rec-title{font-size:14px;font-weight:600;color:#1B4D3E;margin-bottom:8px}
 .rec-text{font-size:13px;color:#444;line-height:1.7}
-
 .pdf-btn{background:#1B4D3E;color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;touch-action:manipulation}
 .wa-btn{background:#25D366;color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;touch-action:manipulation}
 .urgency{text-align:center;font-size:12px;color:#e24b4a;font-weight:500;margin-bottom:10px}
 .restart-btn{background:none;border:1.5px solid #d0e8df;border-radius:12px;padding:12px;font-size:14px;color:#666;cursor:pointer;width:100%;margin-top:4px;touch-action:manipulation}
-
 .status-msg{font-size:13px;color:#1B4D3E;text-align:center;padding:8px;background:#E8F5EF;border-radius:8px;margin-top:8px}
 .error-msg{font-size:13px;color:#e24b4a;text-align:center;padding:8px;background:#FCEBEB;border-radius:8px;margin-top:8px}
 </style>
 </head>
 <body>
-
 <div class="wrap">
 <div class="phone">
 
@@ -209,8 +184,13 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+// ─────────────────────────────────────────────
+// STEP 1: Paste your Google Apps Script URL here
+const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbytWmEMVJH5N2A1t2FExIxKf57i5QHg_cwM0FIqYm35cauCOrvDJ9TvwvDBapgwrY2H/exec';
+
+// STEP 2: Paste your GHL Webhook URL here
 const GHL_WEBHOOK = 'YOUR_GHL_WEBHOOK_URL_HERE';
-const ADMIN_EMAIL = 'YOUR_ADMIN_EMAIL_HERE';
+// ─────────────────────────────────────────────
 
 const questions = [
   {q:"How do you feel during the day?",opts:[{i:"😴",t:"Mostly tired",p:10},{i:"😐",t:"Sometimes low energy",p:5},{i:"⚡",t:"Active most of the time",p:0}]},
@@ -290,18 +270,61 @@ async function submitLead(){
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;
   btn.textContent='Processing...';
-  document.getElementById('submit-status').innerHTML='<div class="status-msg">Sending your data...</div>';
-  try{
-    await sendToGHL({name,phone,email,weight,city,score:total,result:r.label,title:r.title,desc:r.desc});
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">Done! Loading your result...</div>';
-  }catch(e){
-    document.getElementById('submit-status').innerHTML='<div class="error-msg">Webhook not configured yet. Loading result anyway...</div>';
+  document.getElementById('submit-status').innerHTML='<div class="status-msg">Saving your data...</div>';
+
+  const payload={
+    name,phone,email,weight,city,
+    score:total,result:r.label,title:r.title,desc:r.desc,
+    source:'Liver Health Quiz',
+    submittedAt:new Date().toISOString()
+  };
+
+  // Run both integrations in parallel
+  const [sheetRes, ghlRes] = await Promise.allSettled([
+    sendToGoogleSheet(payload),
+    sendToGHL(payload)
+  ]);
+
+  // Build status message
+  const sheetOk = sheetRes.status==='fulfilled';
+  const ghlOk   = ghlRes.status==='fulfilled';
+
+  if(sheetOk && ghlOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet & sent to GHL. Loading your result...</div>';
+  } else if(sheetOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet. GHL webhook not configured.</div>';
+  } else if(ghlOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Sent to GHL. Google Sheet not configured.</div>';
+  } else {
+    document.getElementById('submit-status').innerHTML='<div class="error-msg">Webhooks not configured yet. Loading result anyway...</div>';
   }
-  setTimeout(()=>showResult(r,total,name,phone),800);
+
+  setTimeout(()=>showResult(r,total,name,phone),900);
 }
 
+/* ── Google Sheets via Apps Script ── */
+async function sendToGoogleSheet(data){
+  if(GOOGLE_SHEET_WEBHOOK==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') throw new Error('No sheet webhook');
+  await fetch(GOOGLE_SHEET_WEBHOOK,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name:data.name,
+      phone:data.phone,
+      email:data.email,
+      weight:data.weight,
+      city:data.city,
+      score:data.score,
+      result:data.result,
+      submittedAt:data.submittedAt
+    })
+  });
+}
+
+/* ── GoHighLevel Webhook (triggers WhatsApp automation) ── */
 async function sendToGHL(data){
-  if(GHL_WEBHOOK==='YOUR_GHL_WEBHOOK_URL_HERE') throw new Error('No webhook');
+  if(GHL_WEBHOOK==='YOUR_GHL_WEBHOOK_URL_HERE') throw new Error('No GHL webhook');
   await fetch(GHL_WEBHOOK,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -316,7 +339,7 @@ async function sendToGHL(data){
       liverTitle:data.title,
       liverDesc:data.desc,
       source:'Liver Health Quiz',
-      submittedAt:new Date().toISOString()
+      submittedAt:data.submittedAt
     })
   });
 }
@@ -342,103 +365,139 @@ function downloadPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const name=leadData.name||'Customer';
+  const phone=leadData.phone||'N/A';
+  const email=leadData.email||'N/A';
+  const weight=leadData.weight||'N/A';
+  const city=leadData.city||'N/A';
   const score=leadData.score;
   const result=currentResult;
   const W=210,pad=20;
 
+  /* HEADER */
   doc.setFillColor(27,77,62);
-  doc.rect(0,0,W,45,'F');
+  doc.rect(0,0,W,42,'F');
   doc.setTextColor(255,255,255);
   doc.setFontSize(22);
   doc.setFont('helvetica','bold');
-  doc.text('Liver Health Report',W/2,20,{align:'center'});
-  doc.setFontSize(12);
-  doc.setFont('helvetica','normal');
-  doc.text(`Prepared for: ${name}`,W/2,30,{align:'center'});
+  doc.text('Liver Health Report',W/2,17,{align:'center'});
   doc.setFontSize(10);
-  doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`,W/2,38,{align:'center'});
-
-  doc.setTextColor(27,77,62);
-  doc.setFontSize(14);
-  doc.setFont('helvetica','bold');
-  doc.text('Your Liver Score',W/2,60,{align:'center'});
-
-  doc.setDrawColor(27,77,62);
-  doc.setLineWidth(0.5);
-  doc.circle(W/2,82,18,'S');
-  doc.setFontSize(24);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(27,77,62);
-  doc.text(`${score}`,W/2,86,{align:'center'});
-  doc.setFontSize(9);
   doc.setFont('helvetica','normal');
-  doc.setTextColor(100,100,100);
-  doc.text('out of 50',W/2,92,{align:'center'});
+  doc.text('Report generated on: '+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}),W/2,26,{align:'center'});
+  doc.setFontSize(8.5);
+  doc.text('This report is confidential and prepared exclusively for the individual named below.',W/2,34,{align:'center'});
 
-  const barX=pad,barY=108,barW=W-(pad*2),barH=6;
+  /* CUSTOMER DETAILS BOX */
+  const boxY=48;
+  doc.setFillColor(240,247,244);
+  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'F');
+  doc.setDrawColor(27,77,62);
+  doc.setLineWidth(0.4);
+  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'S');
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);
+  doc.text('Customer Details',pad+6,boxY+9);
+
+  doc.setDrawColor(200,220,215);
+  doc.setLineWidth(0.3);
+  doc.line(pad+6,boxY+12,W-pad-6,boxY+12);
+
+  const c1=pad+6,c2=pad+55,c3=pad+105,r1=boxY+20,r2=boxY+32;
+
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
+  doc.text('Name',c1,r1);
+  doc.text('Mobile',c2,r1);
+  doc.text('Email',c3,r1);
+  doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
+  doc.text(name,c1,r1+6);
+  doc.text(phone,c2,r1+6);
+  const em=email.length>28?email.substring(0,26)+'...':email;
+  doc.text(em,c3,r1+6);
+
+  doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
+  doc.text('City',c1,r2);
+  doc.text('Weight',c2,r2);
+  doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
+  doc.text(city,c1,r2+6);
+  doc.text(weight,c2,r2+6);
+
+  /* SCORE */
+  doc.setTextColor(27,77,62);
+  doc.setFontSize(13);doc.setFont('helvetica','bold');
+  doc.text('Your Liver Score',W/2,100,{align:'center'});
+
+  doc.setDrawColor(27,77,62);doc.setLineWidth(0.6);
+  doc.circle(W/2,116,15,'S');
+  doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text(`${score}`,W/2,120,{align:'center'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(120,120,120);
+  doc.text('out of 50',W/2,126,{align:'center'});
+
+  /* SCORE BAR */
+  const barX=pad,barY=136,barW=W-(pad*2),barH=5;
   doc.setFillColor(220,220,220);
-  doc.roundedRect(barX,barY,barW,barH,3,3,'F');
+  doc.roundedRect(barX,barY,barW,barH,2,2,'F');
   const fill=Math.round((score/50)*barW);
   const fc=score<=20?[39,80,10]:score<=30?[186,117,23]:score<=40?[163,45,45]:[121,31,31];
   doc.setFillColor(fc[0],fc[1],fc[2]);
-  doc.roundedRect(barX,barY,fill,barH,3,3,'F');
+  doc.roundedRect(barX,barY,fill,barH,2,2,'F');
+  doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(fc[0],fc[1],fc[2]);
+  doc.text('Status: '+result.label,W/2,149,{align:'center'});
 
-  doc.setFontSize(13);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(fc[0],fc[1],fc[2]);
-  doc.text(`Status: ${result.label}`,W/2,122,{align:'center'});
-
-  doc.setDrawColor(220,220,220);
-  doc.setLineWidth(0.3);
-  doc.line(pad,128,W-pad,128);
-
-  doc.setFontSize(11);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(27,77,62);
-  doc.text('What this means',pad,137);
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
-  doc.setTextColor(60,60,60);
+  /* WHAT THIS MEANS */
+  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);
+  doc.line(pad,155,W-pad,155);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('What this means',pad,163);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
   const descLines=doc.splitTextToSize(result.desc,W-(pad*2));
-  doc.text(descLines,pad,145);
+  doc.text(descLines,pad,171);
 
-  doc.line(pad,158,W-pad,158);
-  doc.setFontSize(11);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(27,77,62);
-  doc.text('Your personalised recommendations',pad,167);
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
-  doc.setTextColor(60,60,60);
-  let ty=175;
+  /* RECOMMENDATIONS */
+  doc.line(pad,181,W-pad,181);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('Your personalised recommendations',pad,189);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
+  let ty=197;
   result.tips.forEach((tip)=>{
     doc.setFillColor(27,77,62);
     doc.circle(pad+2,ty-1.5,1.5,'F');
     doc.text(tip,pad+7,ty);
-    ty+=9;
+    ty+=8;
   });
 
-  doc.line(pad,ty+5,W-pad,ty+5);
-  doc.setFontSize(11);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(27,77,62);
-  doc.text('Next step',pad,ty+14);
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
-  doc.setTextColor(60,60,60);
-  doc.text(result.rec,pad,ty+22,{maxWidth:W-(pad*2)});
+  /* NEXT STEP */
+  doc.line(pad,ty+3,W-pad,ty+3);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('Next step',pad,ty+11);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
+  const recLines=doc.splitTextToSize(result.rec,W-(pad*2));
+  doc.text(recLines,pad,ty+18);
 
+  /* DISCLAIMER BOX */
+  const discY=243;
+  doc.setFillColor(255,248,235);
+  doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'F');
+  doc.setDrawColor(186,117,23);doc.setLineWidth(0.4);
+  doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'S');
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(133,79,11);
+  doc.text('Disclaimer',pad+6,discY+7);
+  doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,70,10);
+  const disc='This report is based on a self-assessment quiz and is for general wellness awareness only. It does not constitute a medical diagnosis or professional health advice. Results are indicative and not a substitute for consultation with a qualified medical practitioner. If you have any health concerns, please consult a licensed doctor before making any health decisions.';
+  const discLines=doc.splitTextToSize(disc,W-(pad*2)-12);
+  doc.text(discLines,pad+6,discY+13);
+
+  /* FOOTER */
   doc.setFillColor(27,77,62);
-  doc.rect(0,272,W,25,'F');
+  doc.rect(0,274,W,23,'F');
   doc.setTextColor(255,255,255);
-  doc.setFontSize(11);
-  doc.setFont('helvetica','bold');
-  doc.text('Talk to our expert on WhatsApp',W/2,281,{align:'center'});
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
-  doc.text('+91 XXXXXXXXXX  |  No spam. Only your report.',W/2,289,{align:'center'});
+  doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('Talk to our expert on WhatsApp',W/2,282,{align:'center'});
+  doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+  doc.text('+91 XXXXXXXXXX   |   No spam. Only your health matters.',W/2,290,{align:'center'});
 
-  doc.save(`Liver_Health_Report_${name.replace(/\s/g,'_')}.pdf`);
+  doc.save('Liver_Health_Report_'+name.replace(/\s/g,'_')+'.pdf');
 }
 
 function restart(){show('s-land')}
