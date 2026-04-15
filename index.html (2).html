@@ -80,7 +80,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 
 <div class="screen active" id="s-land">
   <div class="land-top">
-    <div class="land-badge">Free — 60 seconds</div>
+    <div class="land-badge">Free — 2 minutes</div>
     <div class="liver-circle">
       <svg width="38" height="38" viewBox="0 0 36 36" fill="none">
         <path d="M8 16 C8 10 14 7 20 9 C26 11 28 8 29 12 C30 16 27 24 20 26 C13 28 8 22 8 16Z" fill="#fff" opacity="0.9"/>
@@ -94,7 +94,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
   <div class="land-body">
     <div class="stats-row">
       <div class="stat-box"><div class="stat-n">10,000+</div><div class="stat-l">Tested</div></div>
-      <div class="stat-box"><div class="stat-n">5 Qs</div><div class="stat-l">Only</div></div>
+      <div class="stat-box"><div class="stat-n">10 Qs</div><div class="stat-l">Only</div></div>
       <div class="stat-box"><div class="stat-n">Free</div><div class="stat-l">Always</div></div>
     </div>
     <div class="feat-list">
@@ -155,7 +155,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
   <div class="result-top">
     <div class="score-circle">
       <div class="score-num" id="r-score">0</div>
-      <div class="score-max">out of 50</div>
+      <div class="score-max">out of 100</div>
     </div>
     <div class="result-badge" id="r-badge"></div>
     <div class="result-title" id="r-title"></div>
@@ -193,18 +193,23 @@ const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZE
 // ─────────────────────────────────────────────
 
 const questions = [
-  {q:"How do you feel during the day?",opts:[{i:"😴",t:"Mostly tired",p:10},{i:"😐",t:"Sometimes low energy",p:5},{i:"⚡",t:"Active most of the time",p:0}]},
-  {q:"Do you have fat around your stomach?",opts:[{i:"🔴",t:"Yes, clearly visible",p:10},{i:"⚠️",t:"Slightly",p:5},{i:"✅",t:"No",p:0}]},
-  {q:"How is your digestion?",opts:[{i:"😣",t:"Bloating or gas often",p:10},{i:"😐",t:"Sometimes uncomfortable",p:5},{i:"😊",t:"Smooth and normal",p:0}]},
-  {q:"How often do you eat outside or junk food?",opts:[{i:"🍔",t:"Almost daily",p:10},{i:"🍕",t:"2-3 times a week",p:5},{i:"🥗",t:"Rarely",p:0}]},
-  {q:"Your lifestyle is closer to:",opts:[{i:"🍻",t:"Regular drinking or late nights",p:10},{i:"🌙",t:"Occasional",p:5},{i:"🌿",t:"Rare or disciplined",p:0}]}
+  {q:"How often do you consume alcohol?",hint:"Direct liver load",opts:[{i:"🚫",t:"Never",p:0},{i:"🥂",t:"Occasionally (1–2/month)",p:3},{i:"🍺",t:"Weekly",p:6},{i:"🍻",t:"2–3 times/week",p:8},{i:"🔴",t:"Daily",p:10}]},
+  {q:"Do you experience bloating or acidity?",hint:"Digestive stress = liver overload",opts:[{i:"✅",t:"Never",p:0},{i:"😐",t:"Sometimes",p:4},{i:"😣",t:"Frequently",p:7},{i:"🔴",t:"Daily",p:10}]},
+  {q:"How is your energy level throughout the day?",hint:"Liver = energy metabolism",opts:[{i:"⚡",t:"Very energetic",p:0},{i:"😐",t:"Slight fatigue",p:3},{i:"😴",t:"Often tired",p:7},{i:"🔴",t:"Always exhausted",p:10}]},
+  {q:"Do you have difficulty losing weight?",hint:"Fatty liver correlation",opts:[{i:"✅",t:"No",p:0},{i:"😐",t:"Slight difficulty",p:3},{i:"😓",t:"Very difficult",p:7},{i:"🔴",t:"Nothing works",p:10}]},
+  {q:"How often do you eat outside / processed food?",hint:"Toxins + bad fats",opts:[{i:"🥗",t:"Rarely",p:0},{i:"🍕",t:"1–2 times/week",p:4},{i:"🍔",t:"3–5 times/week",p:7},{i:"🔴",t:"Daily",p:10}]},
+  {q:"Do you feel heaviness after meals?",hint:"Poor bile function",opts:[{i:"✅",t:"Never",p:0},{i:"😐",t:"Sometimes",p:4},{i:"😣",t:"Frequently",p:7},{i:"🔴",t:"Every meal",p:10}]},
+  {q:"How is your sleep quality?",hint:"Liver detox happens at night",opts:[{i:"😴",t:"Deep & refreshing",p:0},{i:"😐",t:"Okay",p:3},{i:"😵",t:"Disturbed",p:7},{i:"🔴",t:"Poor / insomnia",p:10}]},
+  {q:"Do you have dark circles or dull skin?",hint:"Toxin buildup indicator",opts:[{i:"✅",t:"No",p:0},{i:"😐",t:"Slight",p:3},{i:"😔",t:"Visible",p:7},{i:"🔴",t:"Very prominent",p:10}]},
+  {q:"Do you feel frequent cravings (sugar/junk)?",hint:"Metabolic imbalance",opts:[{i:"✅",t:"No",p:0},{i:"😐",t:"Occasionally",p:3},{i:"🍫",t:"Often",p:7},{i:"🔴",t:"Very high cravings",p:10}]},
+  {q:"Have you ever been diagnosed with fatty liver or high cholesterol?",hint:"Strongest indicator",opts:[{i:"✅",t:"No",p:0},{i:"⚠️",t:"Borderline",p:5},{i:"😓",t:"Yes (mild)",p:8},{i:"🔴",t:"Yes (moderate/severe)",p:10}]}
 ];
 
 const results = [
-  {max:20,label:"Healthy",color:"#27500A",bg:"#EAF3DE",title:"Your liver is healthy",desc:"Your liver is functioning well. Keep your current lifestyle and avoid overloading it.",rec:"Maintain a balanced diet, stay hydrated and exercise regularly to keep your liver healthy.",tips:["Drink 3 litres of water daily","Eat green vegetables every day","Exercise at least 30 mins 5 days a week","Avoid processed sugar","Get 7-8 hours of sleep"],urgency:""},
-  {max:30,label:"Moderate",color:"#633806",bg:"#FAEEDA",title:"Your liver needs attention",desc:"Early signs of liver stress are visible. Small changes now can prevent bigger problems later.",rec:"Reduce oily and processed food. Consider a liver detox diet and increase water intake.",tips:["Cut down outside food to once a week","Increase water intake to 3 litres daily","Add turmeric and ginger to your diet","Avoid alcohol for 30 days","Walk 30 mins every morning"],urgency:""},
-  {max:40,label:"At risk",color:"#A32D2D",bg:"#FCEBEB",title:"Your liver is under stress",desc:"Your liver is overloaded and may be affecting your energy, digestion and fat metabolism.",rec:"Our 30-Day Liver Reset Kit is recommended. Speak to our expert for a personalised plan.",tips:["Immediately stop junk and fried food","Drink warm lemon water every morning","Avoid alcohol completely","Take liver support supplements","Consult our expert for a personalised reset plan"],urgency:"Limited consultation slots available today."},
-  {max:50,label:"Critical",color:"#791F1F",bg:"#FCEBEB",title:"Your liver is highly overloaded",desc:"Your liver is under heavy stress. Immediate action is strongly recommended to restore function.",rec:"Urgent care needed. Our expert will guide you with an immediate liver restoration plan.",tips:["Stop all processed food immediately","Avoid alcohol completely","Drink only warm water — no cold drinks","Start liver detox under expert guidance","Contact our expert today — do not delay"],urgency:"Act now — limited expert slots available today."}
+  {max:25,label:"Healthy Liver",color:"#27500A",bg:"#EAF3DE",title:"Your liver is functioning well",desc:"Your liver is in good shape! Maintenance is still important — keep protecting it with healthy habits.",rec:"Keep up a balanced diet, stay hydrated and exercise regularly. Consider a monthly liver-support routine.",tips:["Drink 3 litres of water daily","Eat green vegetables every day","Exercise at least 30 mins, 5 days a week","Avoid processed sugar","Get 7–8 hours of quality sleep"],urgency:""},
+  {max:50,label:"At Risk",color:"#633806",bg:"#FAEEDA",title:"Early signs of liver stress detected",desc:"Your liver is showing early stress signals. Small changes now can prevent bigger problems later.",rec:"Reduce oily and processed food. Consider a liver detox diet, increase water intake and add a Detox + Strength support.",tips:["Cut down outside food to once a week","Increase water intake to 3 litres daily","Add turmeric and ginger to your diet","Avoid alcohol for 30 days","Walk 30 mins every morning"],urgency:""},
+  {max:75,label:"Liver Under Stress",color:"#A32D2D",bg:"#FCEBEB",title:"Your liver is struggling and needs immediate support",desc:"Your liver is overloaded and is likely affecting your energy, digestion and fat metabolism. Act now before it worsens.",rec:"Start a Detox program immediately, then follow with a Strength supplement. Speak to our expert for a personalised plan.",tips:["Immediately stop junk and fried food","Drink warm lemon water every morning","Avoid alcohol completely","Take liver support supplements (Detox first)","Consult our expert for a personalised reset plan"],urgency:"Limited consultation slots available today."},
+  {max:100,label:"High Risk",color:"#791F1F",bg:"#FCEBEB",title:"Your liver health is critically affected",desc:"Your liver is under heavy, critical stress. Immediate and urgent action is required to restore healthy liver function.",rec:"Urgent care needed. Our expert will guide you with an immediate liver restoration bundle plan. Do not delay.",tips:["Stop all processed food immediately","Avoid alcohol completely","Drink only warm water — no cold drinks","Start liver detox under expert guidance","Contact our expert today — do not delay"],urgency:"Act now — limited expert slots available today."}
 ];
 
 let current=0,answers=[],selected=null,leadData={},currentResult=null;
@@ -219,9 +224,9 @@ function startQuiz(){current=0;answers=[];renderQuestion();show('s-quiz')}
 
 function renderQuestion(){
   const q=questions[current];
-  document.getElementById('step-label').textContent=`Step ${current+1} of 5`;
-  document.getElementById('prog-fill').style.width=`${((current+1)/5)*100}%`;
-  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('step-label').textContent=`Step ${current+1} of 10`;
+  document.getElementById('prog-fill').style.width=`${((current+1)/10)*100}%`;
+  document.getElementById('q-text').innerHTML=q.q+(q.hint?`<div style="font-size:12px;color:#ffffff99;margin-top:6px;font-weight:400">👉 ${q.hint}</div>`:'');
   selected=null;
   const nb=document.getElementById('next-btn');
   nb.classList.remove('ready');
@@ -244,7 +249,7 @@ function renderQuestion(){
 function nextQuestion(){
   if(selected===null)return;
   answers.push(questions[current].opts[selected].p);
-  if(current<4){current++;renderQuestion();}
+  if(current<9){current++;renderQuestion();}
   else{show('s-lead');}
 }
 
@@ -432,14 +437,14 @@ function downloadPDF(){
   doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
   doc.text(`${score}`,W/2,120,{align:'center'});
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(120,120,120);
-  doc.text('out of 50',W/2,126,{align:'center'});
+  doc.text('out of 100',W/2,126,{align:'center'});
 
   /* SCORE BAR */
   const barX=pad,barY=136,barW=W-(pad*2),barH=5;
   doc.setFillColor(220,220,220);
   doc.roundedRect(barX,barY,barW,barH,2,2,'F');
-  const fill=Math.round((score/50)*barW);
-  const fc=score<=20?[39,80,10]:score<=30?[186,117,23]:score<=40?[163,45,45]:[121,31,31];
+  const fill=Math.round((score/100)*barW);
+  const fc=score<=25?[39,80,10]:score<=50?[186,117,23]:score<=75?[163,45,45]:[121,31,31];
   doc.setFillColor(fc[0],fc[1],fc[2]);
   doc.roundedRect(barX,barY,fill,barH,2,2,'F');
   doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(fc[0],fc[1],fc[2]);
