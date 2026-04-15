@@ -188,7 +188,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 // CONFIGURATION — fill these in
 // ─────────────────────────────────────────────
 const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyHWrr4FXs3wLljS-zsIT9L7-c2Q8x1-E2k3798YPWE4nzwF4QC8aX7eZd6cN3LOjA/exec';
-const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZEKUMf/webhook-trigger/9ab3e4ff-939e-48ac-8e73-05a27ede8508';
+// const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZEKUMf/webhook-trigger/9ab3e4ff-939e-48ac-8e73-05a27ede8508';
 const WHATSAPP_NUMBER = '91XXXXXXXXXX'; // ← Replace with your actual WhatsApp number
 // ─────────────────────────────────────────────
 
@@ -474,13 +474,13 @@ async function sendToGoogleSheet(data){
 // GHL does not return CORS headers, causing browser to throw a network error
 // even when the webhook actually receives the data. We use no-cors so it
 // never fails on the client side (GHL still receives the POST correctly).
-async function sendToGHL(data){
-  await fetch(GHL_WEBHOOK, {
-    method: 'POST',
-    mode: 'no-cors',  // ← This is the main fix for "GHL not configured" error
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  });
+// async function sendToGHL(data){
+//   await fetch(GHL_WEBHOOK, {
+//     method: 'POST',
+//     mode: 'no-cors',  // ← This is the main fix for "GHL not configured" error
+//     headers: {'Content-Type': 'application/json'},
+//     body: JSON.stringify(data)
+//   });
   // no-cors fetch always resolves (never throws), so we treat reaching here as success
 }
 
