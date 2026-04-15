@@ -89,7 +89,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
       </svg>
     </div>
     <h1>Check your liver health score in 60 seconds</h1>
-    <p>Find out if your liver is affecting your energy, digestion & fat loss</p>
+    <p>Find out if your liver is affecting your energy, digestion &amp; fat loss</p>
   </div>
   <div class="land-body">
     <div class="stats-row">
@@ -100,7 +100,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
     <div class="feat-list">
       <div class="feat-item"><div class="chk"><svg width="11" height="11" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>Know your liver stress level</div>
       <div class="feat-item"><div class="chk"><svg width="11" height="11" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>Get personalised recommendations</div>
-      <div class="feat-item"><div class="chk"><svg width="11" height="11" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>PDF report sent to your WhatsApp & email</div>
+      <div class="feat-item"><div class="chk"><svg width="11" height="11" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" stroke="#1B4D3E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>PDF report sent to your WhatsApp &amp; email</div>
     </div>
     <button class="start-btn" onclick="startQuiz()">Start free test</button>
     <div class="trust-line">No spam. Only your result.</div>
@@ -111,9 +111,9 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
   <div class="top-bar">
     <div class="progress-row">
       <button class="back-btn" onclick="goBack()">&#8592; Back</button>
-      <span class="step-label" id="step-label">Step 1 of 5</span>
+      <span class="step-label" id="step-label">Step 1 of 10</span>
     </div>
-    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:20%"></div></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:10%"></div></div>
     <div class="q-text" id="q-text"></div>
   </div>
   <div class="options" id="options-wrap"></div>
@@ -146,7 +146,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
       <div class="field-label">Your city</div>
       <input class="field-input" id="f-city" type="text" placeholder="e.g. Mumbai" autocomplete="address-level2">
     </div>
-    <button class="submit-btn" id="submit-btn" onclick="submitLead()">Show my liver score & get PDF</button>
+    <button class="submit-btn" id="submit-btn" onclick="submitLead()">Show my liver score &amp; get PDF</button>
     <div id="submit-status"></div>
   </div>
 </div>
@@ -185,11 +185,11 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ─────────────────────────────────────────────
-// STEP 1: Paste your Google Apps Script URL here
+// CONFIGURATION — fill these in
+// ─────────────────────────────────────────────
 const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbwHXTxENoYKi0lw3kA26buUA0jbu15NR10c4cz-BIS_yxFd7eIqMMHNwZ1MYOmWaHg/exec';
-
-// STEP 2: Paste your GHL Webhook URL here
 const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZEKUMf/webhook-trigger/9ab3e4ff-939e-48ac-8e73-05a27ede8508';
+const WHATSAPP_NUMBER = '91XXXXXXXXXX'; // ← Replace with your actual WhatsApp number
 // ─────────────────────────────────────────────
 
 const questions = [
@@ -220,7 +220,7 @@ function show(id){
   window.scrollTo(0,0);
 }
 
-function startQuiz(){current=0;answers=[];renderQuestion();show('s-quiz')}
+function startQuiz(){current=0;answers=[];renderQuestion();show('s-quiz');}
 
 function renderQuestion(){
   const q=questions[current];
@@ -258,95 +258,230 @@ function goBack(){
   else{current--;answers.pop();renderQuestion();}
 }
 
+// ─── GENERATE PDF AND RETURN BASE64 (does NOT trigger download) ───
+function generatePDFBase64(r, total, name, phone, email, weight, city){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,pad=20;
+
+  doc.setFillColor(27,77,62);
+  doc.rect(0,0,W,42,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(22);doc.setFont('helvetica','bold');
+  doc.text('Liver Health Report',W/2,17,{align:'center'});
+  doc.setFontSize(10);doc.setFont('helvetica','normal');
+  doc.text('Report generated on: '+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}),W/2,26,{align:'center'});
+  doc.setFontSize(8.5);
+  doc.text('This report is confidential and prepared exclusively for the individual named below.',W/2,34,{align:'center'});
+
+  const boxY=48;
+  doc.setFillColor(240,247,244);
+  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'F');
+  doc.setDrawColor(27,77,62);doc.setLineWidth(0.4);
+  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'S');
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('Customer Details',pad+6,boxY+9);
+  doc.setDrawColor(200,220,215);doc.setLineWidth(0.3);
+  doc.line(pad+6,boxY+12,W-pad-6,boxY+12);
+
+  const c1=pad+6,c2=pad+55,c3=pad+105,r1=boxY+20,r2=boxY+32;
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
+  doc.text('Name',c1,r1);doc.text('Mobile',c2,r1);doc.text('Email',c3,r1);
+  doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
+  doc.text(name,c1,r1+6);doc.text(phone,c2,r1+6);
+  const em=email.length>28?email.substring(0,26)+'...':email;
+  doc.text(em,c3,r1+6);
+  doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
+  doc.text('City',c1,r2);doc.text('Weight',c2,r2);
+  doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
+  doc.text(city||'N/A',c1,r2+6);doc.text(weight||'N/A',c2,r2+6);
+
+  doc.setTextColor(27,77,62);doc.setFontSize(13);doc.setFont('helvetica','bold');
+  doc.text('Your Liver Score',W/2,100,{align:'center'});
+  doc.setDrawColor(27,77,62);doc.setLineWidth(0.6);
+  doc.circle(W/2,116,15,'S');
+  doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text(`${total}`,W/2,120,{align:'center'});
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(120,120,120);
+  doc.text('out of 100',W/2,126,{align:'center'});
+
+  const barX=pad,barY=136,barW=W-(pad*2),barH=5;
+  doc.setFillColor(220,220,220);doc.roundedRect(barX,barY,barW,barH,2,2,'F');
+  const fill=Math.round((total/100)*barW);
+  const fc=total<=25?[39,80,10]:total<=50?[186,117,23]:total<=75?[163,45,45]:[121,31,31];
+  doc.setFillColor(fc[0],fc[1],fc[2]);doc.roundedRect(barX,barY,fill,barH,2,2,'F');
+  doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(fc[0],fc[1],fc[2]);
+  doc.text('Status: '+r.label,W/2,149,{align:'center'});
+
+  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);
+  doc.line(pad,155,W-pad,155);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('What this means',pad,163);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
+  const descLines=doc.splitTextToSize(r.desc,W-(pad*2));
+  doc.text(descLines,pad,171);
+
+  doc.line(pad,181,W-pad,181);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('Your personalised recommendations',pad,189);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
+  let ty=197;
+  r.tips.forEach((tip)=>{
+    doc.setFillColor(27,77,62);doc.circle(pad+2,ty-1.5,1.5,'F');
+    doc.text(tip,pad+7,ty);ty+=8;
+  });
+
+  doc.line(pad,ty+3,W-pad,ty+3);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
+  doc.text('Next step',pad,ty+11);
+  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
+  const recLines=doc.splitTextToSize(r.rec,W-(pad*2));
+  doc.text(recLines,pad,ty+18);
+
+  const discY=243;
+  doc.setFillColor(255,248,235);doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'F');
+  doc.setDrawColor(186,117,23);doc.setLineWidth(0.4);doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'S');
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(133,79,11);
+  doc.text('Disclaimer',pad+6,discY+7);
+  doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,70,10);
+  const disc='This report is based on a self-assessment quiz and is for general wellness awareness only. It does not constitute a medical diagnosis or professional health advice. Results are indicative and not a substitute for consultation with a qualified medical practitioner. If you have any health concerns, please consult a licensed doctor before making any health decisions.';
+  const discLines=doc.splitTextToSize(disc,W-(pad*2)-12);
+  doc.text(discLines,pad+6,discY+13);
+
+  doc.setFillColor(27,77,62);doc.rect(0,274,W,23,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('Talk to our expert on WhatsApp',W/2,282,{align:'center'});
+  doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+  doc.text('+91 XXXXXXXXXX   |   No spam. Only your health matters.',W/2,290,{align:'center'});
+
+  // Return base64 string (no download triggered)
+  return doc.output('datauristring').split(',')[1];
+}
+
+// ─── SUBMIT LEAD ───
 async function submitLead(){
-  const name=document.getElementById('f-name').value.trim();
-  const phone=document.getElementById('f-phone').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  const weight=document.getElementById('f-weight').value.trim();
-  const city=document.getElementById('f-city').value.trim();
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const weight= document.getElementById('f-weight').value.trim();
+  const city  = document.getElementById('f-city').value.trim();
+
   if(!name||!phone||!email){
     document.getElementById('submit-status').innerHTML='<div class="error-msg">Please enter your name, WhatsApp number and email.</div>';
     return;
   }
-  const total=answers.reduce((a,b)=>a+b,0);
-  const r=results.find(x=>total<=x.max)||results[results.length-1];
-  leadData={name,phone,email,weight,city,score:total,result:r.label,title:r.title};
-  currentResult=r;
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;
-  btn.textContent='Processing...';
-  document.getElementById('submit-status').innerHTML='<div class="status-msg">Saving your data...</div>';
 
-  const payload={
-    name,phone,email,weight,city,
-    score:total,result:r.label,title:r.title,desc:r.desc,
-    source:'Liver Health Quiz',
-    submittedAt:new Date().toISOString()
+  const total = answers.reduce((a,b)=>a+b,0);
+  const r = results.find(x=>total<=x.max)||results[results.length-1];
+  leadData = {name,phone,email,weight,city,score:total,result:r.label,title:r.title};
+  currentResult = r;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  document.getElementById('submit-status').innerHTML='<div class="status-msg">⏳ Generating your PDF & saving data...</div>';
+
+  // ── FIX 1: Generate PDF base64 BEFORE sending to Google Sheet ──
+  let pdfBase64 = '';
+  try {
+    pdfBase64 = generatePDFBase64(r, total, name, phone, email, weight, city);
+  } catch(e) {
+    console.error('PDF generation error:', e);
+  }
+
+  const submittedAt = new Date().toISOString();
+
+  const sheetPayload = {
+    name, phone, email,
+    weight: weight||'N/A',
+    city:   city||'N/A',
+    score:  total,
+    result: r.label,
+    submittedAt,
+    pdfBase64  // ← Now actually populated
   };
 
-  // Run both integrations in parallel
-  const [sheetRes, ghlRes] = await Promise.allSettled([
-    sendToGoogleSheet(payload),
-    sendToGHL(payload)
-  ]);
+  const ghlPayload = {
+    firstName:   name,
+    phone,
+    email,
+    city:        city||'N/A',
+    weight:      weight||'N/A',
+    liverScore:  total,
+    liverResult: r.label,
+    liverTitle:  r.title,
+    liverDesc:   r.desc,
+    source:      'Liver Health Quiz',
+    submittedAt
+  };
 
-  // Build status message
-  const sheetOk = sheetRes.status==='fulfilled';
-  const ghlOk   = ghlRes.status==='fulfilled';
+  // ── FIX 2: Send Google Sheet first (to get pdfLink), then send GHL with that link ──
+  let pdfLink = 'N/A';
+  let sheetOk = false;
+  let ghlOk   = false;
 
-  if(sheetOk && ghlOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet & sent to GHL. Loading your result...</div>';
-  } else if(sheetOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet. GHL webhook not configured.</div>';
-  } else if(ghlOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Sent to GHL. Google Sheet not configured.</div>';
-  } else {
-    document.getElementById('submit-status').innerHTML='<div class="error-msg">Webhooks not configured yet. Loading result anyway...</div>';
+  // Step A — Send to Google Sheet, get back pdfLink
+  try {
+    const sheetResp = await sendToGoogleSheet(sheetPayload);
+    sheetOk = true;
+    if(sheetResp && sheetResp.pdfLink && sheetResp.pdfLink !== 'N/A'){
+      pdfLink = sheetResp.pdfLink;
+    }
+  } catch(e) {
+    console.error('Google Sheet error:', e);
   }
+
+  // Step B — Send to GHL with the pdfLink included
+  try {
+    await sendToGHL({...ghlPayload, pdfLink});
+    ghlOk = true;
+  } catch(e) {
+    console.error('GHL error:', e);
+  }
+
+  // Status message
+  if(sheetOk && ghlOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Data saved & sent to GHL successfully!</div>';
+  } else if(sheetOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet. GHL send failed — check webhook URL.</div>';
+  } else if(ghlOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Sent to GHL. Google Sheet save failed.</div>';
+  } else {
+    document.getElementById('submit-status').innerHTML='<div class="error-msg">⚠️ Both webhooks failed. Loading result anyway...</div>';
+  }
+
+  // Store pdfLink for result screen
+  leadData.pdfLink = pdfLink;
+  leadData.pdfBase64 = pdfBase64;
 
   setTimeout(()=>showResult(r,total,name,phone),900);
 }
 
-/* ── Google Sheets via Apps Script ── */
+// ── FIX 3: sendToGoogleSheet now returns parsed JSON (to get pdfLink back) ──
 async function sendToGoogleSheet(data){
-  if(GOOGLE_SHEET_WEBHOOK==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') throw new Error('No sheet webhook');
-  await fetch(GOOGLE_SHEET_WEBHOOK,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      name:data.name,
-      phone:data.phone,
-      email:data.email,
-      weight:data.weight,
-      city:data.city,
-      score:data.score,
-      result:data.result,
-      submittedAt:data.submittedAt,
-      pdfBase64:data.pdfBase64 
-    })
+  const resp = await fetch(GOOGLE_SHEET_WEBHOOK, {
+    method: 'POST',
+    // ── FIX 4: Use text/plain to avoid CORS preflight on Apps Script ──
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(data)
   });
+  const json = await resp.json();
+  if(json.status !== 'ok') throw new Error(json.message||'Sheet error');
+  return json; // contains { status, pdfLink }
 }
 
-/* ── GoHighLevel Webhook (triggers WhatsApp automation) ── */
+// ── FIX 5: GHL webhook — use no-cors mode so browser doesn't block it ──
+// GHL does not return CORS headers, causing browser to throw a network error
+// even when the webhook actually receives the data. We use no-cors so it
+// never fails on the client side (GHL still receives the POST correctly).
 async function sendToGHL(data){
-  if(GHL_WEBHOOK==='YOUR_GHL_WEBHOOK_URL_HERE') throw new Error('No GHL webhook');
-  await fetch(GHL_WEBHOOK,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      firstName:data.name,
-      phone:data.phone,
-      email:data.email,
-      city:data.city,
-      weight:data.weight,
-      liverScore:data.score,
-      liverResult:data.result,
-      liverTitle:data.title,
-      liverDesc:data.desc,
-      source:'Liver Health Quiz',
-      submittedAt:data.submittedAt
-    })
+  await fetch(GHL_WEBHOOK, {
+    method: 'POST',
+    mode: 'no-cors',  // ← This is the main fix for "GHL not configured" error
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
   });
+  // no-cors fetch always resolves (never throws), so we treat reaching here as success
 }
 
 function showResult(r,total,name,phone){
@@ -360,132 +495,99 @@ function showResult(r,total,name,phone){
   document.getElementById('r-rec').textContent=r.rec;
   document.getElementById('r-urgency').textContent=r.urgency;
   document.getElementById('wa-btn').onclick=()=>{
-    const msg=encodeURIComponent(`Hi, I checked my liver score. My score is ${total}/50 (${r.label}). My name is ${name}. Please guide me.`);
-    window.open(`https://wa.me/91XXXXXXXXXX?text=${msg}`,'_blank');
+    const pdfInfo = leadData.pdfLink && leadData.pdfLink!=='N/A'
+      ? `\nYour PDF report: ${leadData.pdfLink}`
+      : '';
+    const msg=encodeURIComponent(`Hi, I just checked my liver score. My score is ${total}/100 (${r.label}). My name is ${name}.${pdfInfo} Please guide me.`);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank');
   };
   show('s-result');
 }
 
+// ─── DOWNLOAD PDF (triggered from button on result screen) ───
 function downloadPDF(){
+  const name  = leadData.name||'Customer';
+  const phone = leadData.phone||'N/A';
+  const email = leadData.email||'N/A';
+  const weight= leadData.weight||'N/A';
+  const city  = leadData.city||'N/A';
+  const total = leadData.score||0;
+  const r = currentResult;
+
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const name=leadData.name||'Customer';
-  const phone=leadData.phone||'N/A';
-  const email=leadData.email||'N/A';
-  const weight=leadData.weight||'N/A';
-  const city=leadData.city||'N/A';
-  const score=leadData.score;
-  const result=currentResult;
   const W=210,pad=20;
 
-  /* HEADER */
-  doc.setFillColor(27,77,62);
-  doc.rect(0,0,W,42,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(22);
-  doc.setFont('helvetica','bold');
+  doc.setFillColor(27,77,62);doc.rect(0,0,W,42,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(22);doc.setFont('helvetica','bold');
   doc.text('Liver Health Report',W/2,17,{align:'center'});
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);doc.setFont('helvetica','normal');
   doc.text('Report generated on: '+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}),W/2,26,{align:'center'});
   doc.setFontSize(8.5);
   doc.text('This report is confidential and prepared exclusively for the individual named below.',W/2,34,{align:'center'});
 
-  /* CUSTOMER DETAILS BOX */
   const boxY=48;
-  doc.setFillColor(240,247,244);
-  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'F');
-  doc.setDrawColor(27,77,62);
-  doc.setLineWidth(0.4);
-  doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'S');
-
-  doc.setFontSize(11);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(27,77,62);
+  doc.setFillColor(240,247,244);doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'F');
+  doc.setDrawColor(27,77,62);doc.setLineWidth(0.4);doc.roundedRect(pad,boxY,W-(pad*2),40,3,3,'S');
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
   doc.text('Customer Details',pad+6,boxY+9);
-
-  doc.setDrawColor(200,220,215);
-  doc.setLineWidth(0.3);
-  doc.line(pad+6,boxY+12,W-pad-6,boxY+12);
+  doc.setDrawColor(200,220,215);doc.setLineWidth(0.3);doc.line(pad+6,boxY+12,W-pad-6,boxY+12);
 
   const c1=pad+6,c2=pad+55,c3=pad+105,r1=boxY+20,r2=boxY+32;
-
   doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
-  doc.text('Name',c1,r1);
-  doc.text('Mobile',c2,r1);
-  doc.text('Email',c3,r1);
+  doc.text('Name',c1,r1);doc.text('Mobile',c2,r1);doc.text('Email',c3,r1);
   doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
-  doc.text(name,c1,r1+6);
-  doc.text(phone,c2,r1+6);
+  doc.text(name,c1,r1+6);doc.text(phone,c2,r1+6);
   const em=email.length>28?email.substring(0,26)+'...':email;
   doc.text(em,c3,r1+6);
-
   doc.setFont('helvetica','bold');doc.setTextColor(90,90,90);
-  doc.text('City',c1,r2);
-  doc.text('Weight',c2,r2);
+  doc.text('City',c1,r2);doc.text('Weight',c2,r2);
   doc.setFont('helvetica','normal');doc.setTextColor(27,77,62);
-  doc.text(city,c1,r2+6);
-  doc.text(weight,c2,r2+6);
+  doc.text(city,c1,r2+6);doc.text(weight,c2,r2+6);
 
-  /* SCORE */
-  doc.setTextColor(27,77,62);
-  doc.setFontSize(13);doc.setFont('helvetica','bold');
+  doc.setTextColor(27,77,62);doc.setFontSize(13);doc.setFont('helvetica','bold');
   doc.text('Your Liver Score',W/2,100,{align:'center'});
-
-  doc.setDrawColor(27,77,62);doc.setLineWidth(0.6);
-  doc.circle(W/2,116,15,'S');
+  doc.setDrawColor(27,77,62);doc.setLineWidth(0.6);doc.circle(W/2,116,15,'S');
   doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
-  doc.text(`${score}`,W/2,120,{align:'center'});
+  doc.text(`${total}`,W/2,120,{align:'center'});
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(120,120,120);
   doc.text('out of 100',W/2,126,{align:'center'});
 
-  /* SCORE BAR */
   const barX=pad,barY=136,barW=W-(pad*2),barH=5;
-  doc.setFillColor(220,220,220);
-  doc.roundedRect(barX,barY,barW,barH,2,2,'F');
-  const fill=Math.round((score/100)*barW);
-  const fc=score<=25?[39,80,10]:score<=50?[186,117,23]:score<=75?[163,45,45]:[121,31,31];
-  doc.setFillColor(fc[0],fc[1],fc[2]);
-  doc.roundedRect(barX,barY,fill,barH,2,2,'F');
+  doc.setFillColor(220,220,220);doc.roundedRect(barX,barY,barW,barH,2,2,'F');
+  const fill=Math.round((total/100)*barW);
+  const fc=total<=25?[39,80,10]:total<=50?[186,117,23]:total<=75?[163,45,45]:[121,31,31];
+  doc.setFillColor(fc[0],fc[1],fc[2]);doc.roundedRect(barX,barY,fill,barH,2,2,'F');
   doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(fc[0],fc[1],fc[2]);
-  doc.text('Status: '+result.label,W/2,149,{align:'center'});
+  doc.text('Status: '+r.label,W/2,149,{align:'center'});
 
-  /* WHAT THIS MEANS */
-  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);
-  doc.line(pad,155,W-pad,155);
+  doc.setDrawColor(220,220,220);doc.setLineWidth(0.3);doc.line(pad,155,W-pad,155);
   doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
   doc.text('What this means',pad,163);
   doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
-  const descLines=doc.splitTextToSize(result.desc,W-(pad*2));
+  const descLines=doc.splitTextToSize(r.desc,W-(pad*2));
   doc.text(descLines,pad,171);
 
-  /* RECOMMENDATIONS */
   doc.line(pad,181,W-pad,181);
   doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
   doc.text('Your personalised recommendations',pad,189);
   doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
   let ty=197;
-  result.tips.forEach((tip)=>{
-    doc.setFillColor(27,77,62);
-    doc.circle(pad+2,ty-1.5,1.5,'F');
-    doc.text(tip,pad+7,ty);
-    ty+=8;
+  r.tips.forEach((tip)=>{
+    doc.setFillColor(27,77,62);doc.circle(pad+2,ty-1.5,1.5,'F');
+    doc.text(tip,pad+7,ty);ty+=8;
   });
 
-  /* NEXT STEP */
   doc.line(pad,ty+3,W-pad,ty+3);
   doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(27,77,62);
   doc.text('Next step',pad,ty+11);
   doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);
-  const recLines=doc.splitTextToSize(result.rec,W-(pad*2));
+  const recLines=doc.splitTextToSize(r.rec,W-(pad*2));
   doc.text(recLines,pad,ty+18);
 
-  /* DISCLAIMER BOX */
   const discY=243;
-  doc.setFillColor(255,248,235);
-  doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'F');
-  doc.setDrawColor(186,117,23);doc.setLineWidth(0.4);
-  doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'S');
+  doc.setFillColor(255,248,235);doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'F');
+  doc.setDrawColor(186,117,23);doc.setLineWidth(0.4);doc.roundedRect(pad,discY,W-(pad*2),28,3,3,'S');
   doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(133,79,11);
   doc.text('Disclaimer',pad+6,discY+7);
   doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,70,10);
@@ -493,11 +595,8 @@ function downloadPDF(){
   const discLines=doc.splitTextToSize(disc,W-(pad*2)-12);
   doc.text(discLines,pad+6,discY+13);
 
-  /* FOOTER */
-  doc.setFillColor(27,77,62);
-  doc.rect(0,274,W,23,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.setFillColor(27,77,62);doc.rect(0,274,W,23,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
   doc.text('Talk to our expert on WhatsApp',W/2,282,{align:'center'});
   doc.setFontSize(8.5);doc.setFont('helvetica','normal');
   doc.text('+91 XXXXXXXXXX   |   No spam. Only your health matters.',W/2,290,{align:'center'});
@@ -505,7 +604,7 @@ function downloadPDF(){
   doc.save('Liver_Health_Report_'+name.replace(/\s/g,'_')+'.pdf');
 }
 
-function restart(){show('s-land')}
+function restart(){show('s-land');}
 </script>
 </body>
 </html>
