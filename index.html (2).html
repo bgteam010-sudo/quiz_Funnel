@@ -188,7 +188,7 @@ html,body{width:100%;min-height:100vh;background:#f0f4f3;font-family:-apple-syst
 // CONFIGURATION — fill these in
 // ─────────────────────────────────────────────
 const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyHWrr4FXs3wLljS-zsIT9L7-c2Q8x1-E2k3798YPWE4nzwF4QC8aX7eZd6cN3LOjA/exec';
-// const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZEKUMf/webhook-trigger/9ab3e4ff-939e-48ac-8e73-05a27ede8508';
+const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/P9wyHqsTpu2ZuSZEKUMf/webhook-trigger/9ab3e4ff-939e-48ac-8e73-05a27ede8508';
 const WHATSAPP_NUMBER = '91XXXXXXXXXX'; // ← Replace with your actual WhatsApp number
 // ─────────────────────────────────────────────
 
@@ -361,14 +361,22 @@ function generatePDFBase64(r, total, name, phone, email, weight, city){
 // ─── SUBMIT LEAD ───
 async function submitLead(){
   const name  = document.getElementById('f-name').value.trim();
-  const phone = document.getElementById('f-phone').value.trim();
+  const phoneRaw = document.getElementById('f-phone').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const weight= document.getElementById('f-weight').value.trim();
   const city  = document.getElementById('f-city').value.trim();
 
-  if(!name||!phone||!email){
+  if(!name||!phoneRaw||!email){
     document.getElementById('submit-status').innerHTML='<div class="error-msg">Please enter your name, WhatsApp number and email.</div>';
     return;
+  }
+
+  // ── Format phone: strip spaces/dashes, ensure +91 prefix ──
+  let phone = phoneRaw.replace(/[\s\-\(\)]/g,'');
+  if(phone.startsWith('0')) phone = phone.slice(1);           // remove leading 0
+  if(!phone.startsWith('+')) {
+    if(phone.startsWith('91') && phone.length === 12) phone = '+' + phone;
+    else phone = '+91' + phone;                                // default India code
   }
 
   const total = answers.reduce((a,b)=>a+b,0);
@@ -381,7 +389,7 @@ async function submitLead(){
   btn.textContent = 'Processing...';
   document.getElementById('submit-status').innerHTML='<div class="status-msg">⏳ Generating your PDF & saving data...</div>';
 
-  // ── FIX 1: Generate PDF base64 BEFORE sending to Google Sheet ──
+  // Generate PDF base64 BEFORE sending to Google Sheet
   let pdfBase64 = '';
   try {
     pdfBase64 = generatePDFBase64(r, total, name, phone, email, weight, city);
@@ -391,36 +399,23 @@ async function submitLead(){
 
   const submittedAt = new Date().toISOString();
 
+  // ── Only send to Google Sheet (Apps Script handles GHL server-side with pdfLink) ──
   const sheetPayload = {
     name, phone, email,
     weight: weight||'N/A',
     city:   city||'N/A',
     score:  total,
     result: r.label,
+    title:  r.title,
+    desc:   r.desc,
     submittedAt,
-    pdfBase64  // ← Now actually populated
+    pdfBase64
   };
 
-  const ghlPayload = {
-    firstName:   name,
-    phone,
-    email,
-    city:        city||'N/A',
-    weight:      weight||'N/A',
-    liverScore:  total,
-    liverResult: r.label,
-    liverTitle:  r.title,
-    liverDesc:   r.desc,
-    source:      'Liver Health Quiz',
-    submittedAt
-  };
-
-  // ── FIX 2: Send Google Sheet first (to get pdfLink), then send GHL with that link ──
+  // ── Send to Google Sheet only (Apps Script calls GHL server-side with pdfLink) ──
   let pdfLink = 'N/A';
   let sheetOk = false;
-  let ghlOk   = false;
 
-  // Step A — Send to Google Sheet, get back pdfLink
   try {
     const sheetResp = await sendToGoogleSheet(sheetPayload);
     sheetOk = true;
@@ -431,33 +426,21 @@ async function submitLead(){
     console.error('Google Sheet error:', e);
   }
 
-  // Step B — Send to GHL with the pdfLink included
-  try {
-    await sendToGHL({...ghlPayload, pdfLink});
-    ghlOk = true;
-  } catch(e) {
-    console.error('GHL error:', e);
-  }
-
   // Status message
-  if(sheetOk && ghlOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Data saved & sent to GHL successfully!</div>';
-  } else if(sheetOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Saved to Google Sheet. GHL send failed — check webhook URL.</div>';
-  } else if(ghlOk){
-    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Sent to GHL. Google Sheet save failed.</div>';
+  if(sheetOk){
+    document.getElementById('submit-status').innerHTML='<div class="status-msg">✅ Data saved! Loading your result...</div>';
   } else {
-    document.getElementById('submit-status').innerHTML='<div class="error-msg">⚠️ Both webhooks failed. Loading result anyway...</div>';
+    document.getElementById('submit-status').innerHTML='<div class="error-msg">⚠️ Save failed. Loading result anyway...</div>';
   }
 
-  // Store pdfLink for result screen
+  // Store for result screen
   leadData.pdfLink = pdfLink;
   leadData.pdfBase64 = pdfBase64;
 
   setTimeout(()=>showResult(r,total,name,phone),900);
 }
 
-// ── FIX 3: sendToGoogleSheet now returns parsed JSON (to get pdfLink back) ──
+
 async function sendToGoogleSheet(data){
   const resp = await fetch(GOOGLE_SHEET_WEBHOOK, {
     method: 'POST',
@@ -474,15 +457,15 @@ async function sendToGoogleSheet(data){
 // GHL does not return CORS headers, causing browser to throw a network error
 // even when the webhook actually receives the data. We use no-cors so it
 // never fails on the client side (GHL still receives the POST correctly).
-// async function sendToGHL(data){
-//   await fetch(GHL_WEBHOOK, {
-//     method: 'POST',
-//     mode: 'no-cors',  // ← This is the main fix for "GHL not configured" error
-//     headers: {'Content-Type': 'application/json'},
-//     body: JSON.stringify(data)
-//   });
+async function sendToGHL(data){
+  await fetch(GHL_WEBHOOK, {
+    method: 'POST',
+    mode: 'no-cors',  // ← This is the main fix for "GHL not configured" error
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
   // no-cors fetch always resolves (never throws), so we treat reaching here as success
-// }
+}
 
 function showResult(r,total,name,phone){
   document.getElementById('r-score').textContent=total;
